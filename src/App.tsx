@@ -1,12 +1,15 @@
-import MainLayout from "./components/layout/MainLayout"
-
+import { Routes, Route } from "react-router-dom";
+import MainLayout from "./components/layout/MainLayout";
+import AppRoutes from "./AppRoutes";
 
 const App = () => {
   return (
-    <div className="min-h-screen px-8 py-4 bg-white">
-      <MainLayout />
-    </div>
-  )
-}
+    <Routes>
+      <Route element={<MainLayout />}>
+        <Route path="/*" element={<AppRoutes />} />
+      </Route>
+    </Routes>
+  );
+};
 
-export default App
+export default App;

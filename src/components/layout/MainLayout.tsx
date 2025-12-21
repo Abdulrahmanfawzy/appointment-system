@@ -1,21 +1,16 @@
-import React from "react";
+import { Outlet } from "react-router-dom";
 import Navbar from "./navbar/Navbar";
-import HeroSection from "../home/hero/HeroSection";
 
 // src/components/layout/MainLayout.tsx
 
-/*
- * MainLayout
- * ---------
- * Global layout containg Navbar and Footer
- */
-
-const MainLayout: React.FC = () => {
+const MainLayout = () => {
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
-      <main>{/* <Outlet /> */}</main>
-      <HeroSection />
+
+      <main className="px-8 py-4">
+        <Outlet />
+      </main>
     </div>
   );
 };
