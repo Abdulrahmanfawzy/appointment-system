@@ -1,17 +1,22 @@
-import { Outlet } from "react-router-dom";
+
+import React from "react";
+import { Provider } from "react-redux";
+import { store } from "@/store";
 import Navbar from "./navbar/Navbar";
+import Footer from "./footer/footer";
+import { Outlet } from "react-router-dom";
 
-// src/components/layout/MainLayout.tsx
-
-const MainLayout = () => {
+const MainLayout: React.FC = () => {
   return (
-    <div className="min-h-screen bg-white">
-      <Navbar />
-
-      <main className="px-8 py-4">
-        <Outlet />
-      </main>
-    </div>
+    <Provider store={store}>
+      <div className="min-h-screen bg-white flex flex-col">
+        <Navbar />
+        <div className="grow">
+          <Outlet />
+        </div>
+        <Footer />
+            </div>
+    </Provider>
   );
 };
 

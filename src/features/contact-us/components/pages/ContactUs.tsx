@@ -51,7 +51,7 @@ function ContactUs() {
   }
 
   return (
-    <div className="min-h-screen py-18 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Left Section - Contact Information */}
@@ -60,16 +60,14 @@ function ContactUs() {
               Contact Us
             </h2>
             <p className="text-gray-600 mb-8">
-              We are committed to processing the <br />
-              information in order to contact you <br />
-              and talk about your questions
+              We are committed to processing the information in order to contact you and talk about your questions
             </p>
 
             <div className="space-y-6">
               {/* Phone */}
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0">
-                  <PhoneCall className="w-[16px] h-[16px] text-[#145DB8]" />
+                  <PhoneCall className="w-4 h-4 text-[#145DB8]" />
                 </div>
                 <div>
                   <p className="text-[#05162C] font-medium">080 707 555-321</p>
@@ -79,7 +77,7 @@ function ContactUs() {
               {/* Email */}
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0">
-                  <Mail className="w-[16px] h-[16px] text-blue-600" />
+                  <Mail className="w-4 h-4 text-[#145DB8]" />
                 </div>
                 <div>
                   <p className="text-[#05162C] font-medium">demo@example.com</p>
@@ -89,11 +87,10 @@ function ContactUs() {
               {/* Address */}
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0">
-                  <MapPin className="w-[16px] h-[16px] text-blue-600" />
+                  <MapPin className="w-4 h-4 text-[#145DB8]" />
                 </div>
                 <div>
-                  <p className="text-[#05162C] w-[303px] h-[40px] font-medium
-">
+                  <p className="text-[#05162C] font-medium max-w-xs">
                     526 Melrose Street, Water Mill, 11976 New York
                   </p>
                 </div>
@@ -102,13 +99,11 @@ function ContactUs() {
           </div>
 
           {/* Right Section - Contact Form */}
-          <div>
+          <div className="flex justify-center lg:justify-end">
             <Form {...form}>
               <form 
                 onSubmit={form.handleSubmit(onSubmit)} 
-                className={cn(
-                  "flex flex-col w-[380px] h-fit gap-4"
-                )}
+                className="flex flex-col w-full max-w-[380px] gap-4"
               >
                 {/* Name Field */}
                 <FormField
@@ -118,11 +113,9 @@ function ContactUs() {
                     <FormItem>
                       <FormControl>
                         <Input
-                          placeholder="name"
+                          placeholder="Name"
                           {...field}
-                          className={cn(
-                            "w-[380px] h-12 px-4 py-2 rounded-[10px] border"
-                          )}
+                          className="w-full h-12 px-4 py-2 rounded-[10px] border"
                         />
                       </FormControl>
                       <FormMessage />
@@ -139,11 +132,9 @@ function ContactUs() {
                       <FormControl>
                         <Input
                           type="email"
-                          className={cn(
-                            "w-[380px] h-12 px-4 py-2 rounded-[10px] border"
-                          )}
                           placeholder="your.email@example.com"
                           {...field}
+                          className="w-full h-12 px-4 py-2 rounded-[10px] border"
                         />
                       </FormControl>
                       <FormMessage />
@@ -159,12 +150,10 @@ function ContactUs() {
                     <FormItem>
                       <FormControl>
                         <Textarea
-                          className={cn(
-                            "w-[380px] h-[195px] p-4 rounded-[15px] border"
-                          )}
-                          placeholder="message"
+                          placeholder="Message"
                           rows={6}
                           {...field}
+                          className="w-full min-h-[195px] p-4 rounded-[15px] border resize-none"
                         />
                       </FormControl>
                       <FormMessage />
@@ -176,8 +165,9 @@ function ContactUs() {
                 <Button
                   type="submit"
                   className={cn(
-    "bg-[#145DB8] h-12 px-4 py-2 rounded-[10px]",
-    "hover:opacity-80","hover:bg-[#145DB8]")}
+                    "bg-[#145DB8] h-12 px-4 py-2 rounded-[10px]",
+                    "hover:opacity-90 hover:bg-[#145DB8] transition-opacity"
+                  )}
                   disabled={form.formState.isSubmitting}
                 >
                   {form.formState.isSubmitting ? "Sending..." : "Send Message"}

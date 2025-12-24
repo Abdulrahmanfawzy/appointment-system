@@ -1,15 +1,20 @@
-import { Routes, Route } from "react-router-dom";
-import MainLayout from "./components/layout/MainLayout";
-import AppRoutes from "./AppRoutes";
 
-const App = () => {
+import { BrowserRouter } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import AppRoutes from "./routes/index";
+
+const queryClient = new QueryClient();
+
+function App() {
   return (
-    <Routes>
-      <Route element={<MainLayout />}>
-        <Route path="/*" element={<AppRoutes />} />
-      </Route>
-    </Routes>
-  );
-};
 
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  );
+}
 export default App;
