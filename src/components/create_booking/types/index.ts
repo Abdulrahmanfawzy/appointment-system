@@ -1,16 +1,30 @@
-export interface IReview {
+interface User {
   id: number;
   name: string;
-  time: string;
+  profile_photo: string | null;
+}
+
+interface Booking {
+  id: number;
+  booking_date: string;
+}
+
+export interface IReview {
+  id: number;
+  booking_id: number;
+  user_id: number;
+  doctor_id: number;
   rating: number;
-  image: string;
   comment: string;
+  created_at: string;
+  updated_at: string;
+  user: User;
+  booking: Booking;
 }
 export type BookingDate = {
   date: string;
-  start_time: string;
-  end_time: string;
-  day_name: string;
+  from: string;
+  to: string;
 };
 
 export type Slot = {
@@ -30,9 +44,11 @@ export interface Specialty {
   image: string;
 }
 
-export interface Location {
-  latitude: number;
-  longitude: number;
+export interface ILocation {
+  location?: {
+    latitude: number;
+    longitude: number;
+  };
 }
 
 export interface IDoctor {
@@ -48,4 +64,16 @@ export interface IDoctor {
   clinic_address: string;
   location: Location;
   experience_years: number;
+}
+
+export interface ILocation {
+  latitude: number;
+  longitude: number;
+}
+export interface ApiResponse {
+  data: {
+    reviews: {
+      data: IReview[];
+    };
+  };
 }

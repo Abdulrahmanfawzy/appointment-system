@@ -1,22 +1,62 @@
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp"
+import InputError from "@/components/ui/InputError";
 import { otpSchema, type otpType } from "@/schemas/otp.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller, type SubmitHandler } from "react-hook-form";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useOtp } from "../hooks/useOtp";
+import { Spinner } from "@/components/ui/spinner";
 
 const OtpForm = () => {
-    const { control, handleSubmit , register } = useForm<otpType>({
+    const navigate = useNavigate()
+    const location = useLocation()
+    const [timer, setTimer] = useState(0)
+    useEffect(() => {
+        if (timer <= 0) return;
+
+        const interval = setInterval(() => {
+            setTimer((prev) => prev - 1);
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [timer]);
+    const mobile_number = location.state?.mobile_number;
+    const { control, handleSubmit, register, formState: { errors }, setError
+    } = useForm<otpType>({
         mode: 'onChange',
         resolver: zodResolver(otpSchema),
         defaultValues: {
             otp: "",
-            phone: "1234",
-        },
+            mobile_number: mobile_number
+        }
     });
+    const { verifyOtp, resendOtp } = useOtp(
+        (data) => { // onSuccessVerify
+            console.log(data.token)
+            localStorage.setItem("authToken", data.token);
+            navigate("/", { replace: true });
+        },
+        (error) => { // onErrorVerify
+            const serverErrors = error.response?.data?.errors;
+            if (serverErrors) {
+                Object.keys(serverErrors).forEach((key) =>
+                    setError(key as keyof otpType, { message: serverErrors[key][0] })
+                );
+                return;
+            }
+            if (error.response?.data?.message) {
+                setError("otp", { message: error.response.data.message });
+            }
+        },
+        (time) => setTimer(time) 
+    );
     const onSubmit: SubmitHandler<otpType> = (data) => {
+        verifyOtp.mutate(data)
         console.log(data)
     }
     return (
-        <form onSubmit={handleSubmit(onSubmit)} className="w-76.25 mx-auto ">
+        <form onSubmit={handleSubmit(onSubmit)} className="w-76.25 mx-auto flex flex-col gap-8">
             <div className="space-y-2">
                 <Controller
                     name="otp"
@@ -29,19 +69,24 @@ const OtpForm = () => {
                             onChange={field.onChange}
                         >
                             <InputOTPGroup>
-                                <InputOTPSlot index={0} />
-                                <InputOTPSlot index={1} />
-                                <InputOTPSlot index={2} />
-                                <InputOTPSlot index={3} />
+                                {[0, 1, 2, 3].map((i) => (
+                                    <InputOTPSlot key={i} index={i} />
+                                ))}
                             </InputOTPGroup>
                         </InputOTP>
                     )}
                 />
-                <input type="hidden" {...register("phone")} />
+                <InputError error={errors.otp} />
+                <input type="hidden" defaultValue={mobile_number} {...register("mobile_number")} />
+                <InputError error={errors.mobile_number} />
             </div>
-            <p className="text-[14px] mt-3">Resend code in <span className="text-primary">55</span> s</p>
-            <button type="submit" className="bg-primary text-white rounded-[10px] py-2 cursor-pointer w-full mt-4"> verify</button>
-
+            <button type="button" disabled={timer > 0 || verifyOtp.isPending} onClick={() => resendOtp.mutate({ mobile_number })} className="text-[14px] ">
+                {timer > 0 ? <> Resend code in <span className="text-primary">{timer.toFixed()}</span> s</> : <span className="text-primary">Resend code</span>}
+            </button>
+            <button type="submit" className="bg-primary text-white rounded-[10px] py-2 cursor-pointer w-full flex justify-center items-center gap-1">
+                  {verifyOtp.isPending && <Spinner className="text-white w-5" /> }
+                  verify
+            </button>
         </form>
     )
 }

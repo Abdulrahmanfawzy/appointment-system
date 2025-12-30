@@ -5,17 +5,22 @@ import { store } from "@/store";
 import Navbar from "./navbar/Navbar";
 import Footer from "./footer/footer";
 import { Outlet } from "react-router-dom";
+import FooterAd from "./footer/FooterAd";
+
+
 
 const MainLayout: React.FC = () => {
   return (
     <Provider store={store}>
       <div className="min-h-screen bg-white flex flex-col">
         <Navbar />
+
         <div className="grow">
           <Outlet />
         </div>
+        <FooterAd/>
         <Footer />
-            </div>
+      </div>
     </Provider>
   );
 };

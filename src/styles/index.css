@@ -175,7 +175,6 @@
 
   .text-text-neutral-darker {
     color: #6d7379;
-
   }
   .home-container {
     @apply mt-10 sm:mt-14 md:mt-20 lg:mt-24 xl:mt-25 px-4 sm:px-6 md:px-10 lg:px-15 xl:px-25;
@@ -194,14 +193,15 @@
 
 .circle::after {
   content: "";
-
+  background: #000;
   position: absolute;
-
+  width: 60%;
   inset: 0;
-  top: 500px;
+  top: 0px;
+  left: 50%;
+  transform: translateX(-50%);
   background: url("/src/assets/Group\ 8.png") center/cover no-repeat;
-
-  z-index: 100;
+  /* z-index: -1; */
 }
 
 .marker-cluster-small {

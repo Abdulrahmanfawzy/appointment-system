@@ -1,12 +1,35 @@
 import { Award, MessageSquareText, Star, UsersRound } from "lucide-react";
-const Details = () => {
+type IProps = {
+  experience: number;
+  patientCount: number;
+  reviewsCount: number;
+  rating_avg: number;
+};
+const Details = ({
+  experience,
+  rating_avg,
+  patientCount,
+  reviewsCount,
+}: IProps) => {
   const details = [
-    { icon: <UsersRound size={25} />, number: "2,000+", title: "patient" },
-    { icon: <Award size={25} />, number: "10+", title: "experience" },
-    { icon: <Star size={25} />, number: "4.5", title: "rating" },
+    {
+      icon: <UsersRound size={25} />,
+      number: `${patientCount}+`,
+      title: "patient",
+    },
+    {
+      icon: <Award size={25} />,
+      number: `${experience} ${experience > 1 ? "years" : "year"}`,
+      title: "experience",
+    },
+    {
+      icon: <Star size={25} />,
+      number: `${Number(rating_avg).toFixed(1)}`,
+      title: "rating",
+    },
     {
       icon: <MessageSquareText size={25} />,
-      number: "1872",
+      number: reviewsCount,
       title: "reviews",
     },
   ];
@@ -19,7 +42,7 @@ const Details = () => {
               key={detail.title}
               className="flex flex-col items-center justify-center"
             >
-              <span className="flex items-center justify-center w-[56px] h-[56px] bg-white rounded-full">
+              <span className="flex items-center justify-center w-14 h-14 bg-white rounded-full">
                 {detail.icon}
               </span>
               <h3 className="font-semibold text-[14px]">{detail.number}</h3>

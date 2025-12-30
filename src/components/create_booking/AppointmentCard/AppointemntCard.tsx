@@ -1,99 +1,105 @@
 import { useEffect, useState } from "react";
-import type { DayGroup } from "../types";
-import { bookingDate } from "../dummydata";
+import type { BookingDate, DayGroup } from "../types";
 import Header from "./Header";
 import DisplayDays from "./DisplayDays";
 import Footer from "./Footer";
 import Time from "./Time";
-
-/* ================= Helpers ================= */
-const getMonthLabel = (date: string) => {
-  return new Date(date).toLocaleString("en-US", {
-    month: "long",
-    year: "numeric",
-  });
+import { useDoctor } from "../hooks/useDoctor";
+import { getDayName, getMonthLabel } from "./helper";
+import { BookingSkeleton } from "../Skelton/BookingSkeleton";
+type IProps = {
+  doctorId: number | null;
 };
 
-const AppointemntCard = () => {
+const AppointemntCard = ({ doctorId }: IProps) => {
+  const token: string | null = localStorage.getItem("authToken");
+  const { data, isLoading } = useDoctor(doctorId, token);
+  const doctorAvailability = data?.availability_slots;
+  const [selectedMonth, setSelectedMonth] = useState<string>("");
+  const [selectedDayIndex, setSelectedDayIndex] = useState<number>(0);
+  const [selectedTime, setSelectedTime] = useState<string>("");
+
   /* ================= Months ================= */
-  const monthsFromApi = Array.from(
-    new Set(bookingDate.map((item) => getMonthLabel(item.date)))
+  const monthsFromApi: string[] = Array.from(
+    new Set(
+      doctorAvailability?.map((item: BookingDate) => getMonthLabel(item.date))
+    )
   );
-  /* ================= Group Days ================= */
-  const groupedData = bookingDate.reduce<Record<string, DayGroup>>(
-    (acc, curr) => {
-      if (!acc[curr.date]) {
-        acc[curr.date] = {
-          date: curr.date,
-          dayName: curr.day_name,
-          dayNumber: Number(curr.date.split("-")[2]),
-          slots: [],
-        };
-      }
+  /* ================= Group Data ================= */
 
-      acc[curr.date].slots.push({
-        start: curr.start_time,
-        end: curr.end_time,
-      });
+  const groupedData: Record<string, DayGroup> = (
+    doctorAvailability ?? []
+  ).reduce((acc: Record<string, DayGroup>, curr: BookingDate) => {
+    if (!acc[curr.date]) {
+      acc[curr.date] = {
+        date: curr.date,
+        dayName: getDayName(curr.date),
+        dayNumber: Number(curr.date.split("-")[2]),
+        slots: [],
+      };
+    }
 
-      return acc;
-    },
-    {}
-  );
-  // convert groupedData to array
+    acc[curr.date].slots.push({
+      start: curr.from,
+      end: curr.to,
+    });
+
+    return acc;
+  }, {} as Record<string, DayGroup>);
   const finalDays: DayGroup[] = Object.values(groupedData);
 
-  /* ================= States ================= */
-  const [selectedMonth, setSelectedMonth] = useState(monthsFromApi[0]);
-  const [selectedDayIndex, setSelectedDayIndex] = useState(0);
-  const [selectedTime, setSelectedTime] = useState("");
-
-  /* ================= Filter Days by Month ================= */
-  const filteredDays = finalDays.filter(
+  /* ================= Filter  ================= */
+  const filteredDays = finalDays?.filter(
     (day) => getMonthLabel(day.date) === selectedMonth
   );
-
   /* ================= Current Day ================= */
-  const currentDay =
-    filteredDays[selectedDayIndex] ??
-    ({
-      date: "",
-      dayName: "",
-      dayNumber: 0,
-      slots: [],
-    } as DayGroup);
+  const currentDay: DayGroup = filteredDays[selectedDayIndex] ?? {
+    date: "",
+    dayName: "",
+    dayNumber: 0,
+    slots: [],
+  };
 
-  /* ================= Reset on Month Change ================= */
+  useEffect(() => {
+    if (monthsFromApi.length > 0 && !selectedMonth) {
+      setSelectedMonth(monthsFromApi[0]);
+    }
+  }, [monthsFromApi, selectedMonth]);
+
   useEffect(() => {
     setSelectedDayIndex(0);
     setSelectedTime("");
   }, [selectedMonth]);
-
+  // ========================
+  // ====Display Skeleton ===
+  // ========================
+  if (isLoading) {
+    return <BookingSkeleton />;
+  }
   return (
-    <section className="w-full p-3 md:p-6 border-2 border-[#BBC1C7] rounded-[19px] bg-white mb-6">
-      {/* Header */}
+    <section className="w-full p-3 lg:p-6 border-2 border-[#BBC1C7] rounded-[19px] bg-white mb-6">
       <Header
         selectedMonth={selectedMonth}
         setSelectedMonth={setSelectedMonth}
         monthsFromApi={monthsFromApi}
       />
 
-      {/* Days */}
       <DisplayDays
         filteredDays={filteredDays}
+        selectedDayIndex={selectedDayIndex}
         setSelectedDayIndex={setSelectedDayIndex}
         setSelectedTime={setSelectedTime}
-        selectedDayIndex={selectedDayIndex}
       />
 
-      {/* Time Slots */}
       <Time
         currentDay={currentDay}
-        setSelectedTime={setSelectedTime}
         selectedTime={selectedTime}
+        setSelectedTime={setSelectedTime}
       />
-      {/* Footer */}
+
       <Footer
+        doctorId={doctorId}
+        session_price={data?.session_price}
         selectedTime={selectedTime}
         currentDay={currentDay}
         selectedMonth={selectedMonth}
@@ -101,5 +107,4 @@ const AppointemntCard = () => {
     </section>
   );
 };
-
 export default AppointemntCard;
