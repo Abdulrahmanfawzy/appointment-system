@@ -24,7 +24,7 @@ export const fetchDoctors = async (params: FetchDoctorsParams): Promise<Doctor[]
   const queryParams: Record<string, any> = {
     page,
     search,
-    specialty_id: specialtyId,
+    specializations_id: specialtyId,
     limit: 9,
   };
 
