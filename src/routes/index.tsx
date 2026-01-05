@@ -16,6 +16,7 @@ import ChangePassword from "@/components/Profile/PasswordManagement/ChangePasswo
 // import ContactUs from "@/app/components/contact-us/ContactUs";
 // import Chat from "@/features/chat/components/pages/chat";
 import UnauthenticatedRoute from "@/routes/UnauthenticatedRoute";
+import Favorites from "@/pages/Favorites";
 
 
 export default function AppRoutes() {
