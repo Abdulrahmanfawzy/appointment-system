@@ -18,8 +18,6 @@ import Favorites from "@/pages/Favorites";
 
 // import AuthenticatedRoute from "@/routes/AuthenticatedRoute";
 import UnauthenticatedRoute from "@/routes/UnauthenticatedRoute";
-import Favorites from "@/Pages/Favorites";
-
 
 export default function AppRoutes() {
   return (
