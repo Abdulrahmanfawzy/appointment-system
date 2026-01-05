@@ -15,10 +15,7 @@ import ChangePassword from "@/components/Profile/PasswordManagement/ChangePasswo
 import Favorites from "@/pages/Favorites";
 // import ContactUs from "@/app/components/contact-us/ContactUs";
 // import Chat from "@/features/chat/components/pages/chat";
-
-// import AuthenticatedRoute from "@/routes/AuthenticatedRoute";
 import UnauthenticatedRoute from "@/routes/UnauthenticatedRoute";
-import Favorites from "@/Pages/Favorites";
 
 
 export default function AppRoutes() {
@@ -31,8 +28,6 @@ export default function AppRoutes() {
         <Route path="otp" element={<Otp />} />
       </Route>
 
-      {/* Authenticated Routes */}
-      {/* <Route element={<AuthenticatedRoute />}> */}
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Home />} />
         <Route path="search" element={<Search />} />
@@ -48,7 +43,6 @@ export default function AppRoutes() {
         </Route>
         <Route path="favorites" element={<Favorites />} />
       </Route>
-      {/* </Route> */}
     </Routes>
   );
 }
