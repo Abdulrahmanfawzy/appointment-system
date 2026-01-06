@@ -18,7 +18,6 @@ import ChangePassword from "@/components/Profile/PasswordManagement/ChangePasswo
 import UnauthenticatedRoute from "@/routes/UnauthenticatedRoute";
 import Favorites from "@/pages/Favorites";
 
-
 export default function AppRoutes() {
   return (
     <Routes>
