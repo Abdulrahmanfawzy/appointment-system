@@ -12,12 +12,11 @@ import SignUp from "@/pages/signup/SignUp";
 import Otp from "@/pages/otp/Otp";
 import YourAppointments from "@/components/appointments-page/YourAppointments";
 import ChangePassword from "@/components/Profile/PasswordManagement/ChangePassword";
-import Favorites from "@/pages/Favorites";
+
 // import ContactUs from "@/app/components/contact-us/ContactUs";
 // import Chat from "@/features/chat/components/pages/chat";
-
-// import AuthenticatedRoute from "@/routes/AuthenticatedRoute";
 import UnauthenticatedRoute from "@/routes/UnauthenticatedRoute";
+import Favorites from "@/pages/Favorites";
 
 export default function AppRoutes() {
   return (
@@ -29,8 +28,6 @@ export default function AppRoutes() {
         <Route path="otp" element={<Otp />} />
       </Route>
 
-      {/* Authenticated Routes */}
-      {/* <Route element={<AuthenticatedRoute />}> */}
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Home />} />
         <Route path="search" element={<Search />} />
@@ -44,9 +41,7 @@ export default function AppRoutes() {
           <Route path="edit" element={<EditProfileForm />} />
           <Route path="change-password" element={<ChangePassword />} />
         </Route>
-        <Route path="favorites" element={<Favorites />} />
       </Route>
-      {/* </Route> */}
     </Routes>
   );
 }
