@@ -1,91 +1,82 @@
+import { useState } from "react";
 import { AppointmentCard } from "@/components/appointments-page/components/AppointmentCard";
 import { Calendar28 } from "@/components/appointments-page/components/Calender28";
-
+import type { AppointmentCardData } from "@/Types/appointmentCardData";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-export function TabsDemo() {
+interface AppointmentListProps {
+  data: AppointmentCardData[];
+}
+export function TabsDemo({ data }: AppointmentListProps) {
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  function handleDateChange(date: Date | null) {
+    setSelectedDate(date);
+  }
+
+  const tabsTriggerClass =
+    "data-[state=active]:bg-sky-700 data-[state=active]:text-white text-muted-foreground";
+  const tabsContentClass =
+    "flex gap-6 flex-wrap sm:justify-center xl:justify-start";
+
+  function filterByDateAndStatus(
+    status?: "Upcoming" | "Cancelled" | "Completed",
+  ) {
+    return data.filter(item => {
+      const itemDate = item.date ? new Date(item.date) : null;
+
+      const matchDate =
+        !selectedDate ||
+        (itemDate && itemDate.toDateString() === selectedDate.toDateString());
+
+      const matchStatus = !status || item.status === status;
+
+      return matchDate && matchStatus;
+    });
+  }
+
+  const TABS = [
+    { value: "all", status: undefined, label: "all" },
+    { value: "upcoming", status: "Upcoming", label: "up coming" },
+    { value: "Cancelled", status: "Cancelled", label: "Cancelled" },
+    { value: "completed", status: "Completed", label: "completed" },
+  ] as const;
+
   return (
     <div className="flex  flex-col gap-6">
-      <Tabs defaultValue="all" className="gap-5">
-        <div className="flex justify-between flex-row-reverse ">
-          <Calendar28 />
+      <Tabs
+        defaultValue="all"
+        className="gap-5"
+      >
+        <div className="flex flex-col gap-4 md:flex-row-reverse md:justify-between">
+          <Calendar28
+            onDateChange={handleDateChange}
+            selectedDate={selectedDate}
+          />
           <TabsList className="bg-none">
-            <TabsTrigger
-              value="all"
-              className="
-    data-[state=active]:bg-sky-700
-    data-[state=active]:text-white
-    text-muted-foreground
-    
-  "
-            >
-              all
-            </TabsTrigger>
-            <TabsTrigger
-              value="upcoming"
-              className="
-    data-[state=active]:bg-sky-700
-    data-[state=active]:text-white
-    text-muted-foreground
-   
-  "
-            >
-              up coming
-            </TabsTrigger>
-            <TabsTrigger
-              value="canceled"
-              className="
-    data-[state=active]:bg-sky-700
-    data-[state=active]:text-white
-    text-muted-foreground
-    
-  "
-            >
-              canceled
-            </TabsTrigger>
-            <TabsTrigger
-              value="completed"
-              className="
-    data-[state=active]:bg-sky-700
-    data-[state=active]:text-white
-    text-muted-foreground
-    
-  "
-            >
-              completed
-            </TabsTrigger>
+            {TABS.map(tab => (
+              <TabsTrigger
+                key={tab.value}
+                value={tab.value}
+                className={tabsTriggerClass}
+              >
+                {tab.label}
+              </TabsTrigger>
+            ))}
           </TabsList>
         </div>
-
-        <TabsContent value="all" className="flex justify-content-center">
-          <div className="flex gap-6 flex-wrap sm:justify-center xl:justify-start">
-            <AppointmentCard status="upcoming" />
-            <AppointmentCard status="completed" />
-            <AppointmentCard status="canceled" />
-            <AppointmentCard status="canceled" />
-            <AppointmentCard status="canceled" />
-          </div>
-        </TabsContent>
-        <TabsContent value="upcoming">
-          <div className="flex gap-6 flex-wrap justify-start">
-            <AppointmentCard status="upcoming" />
-            <AppointmentCard status="upcoming" />
-          </div>
-        </TabsContent>
-        <TabsContent value="canceled">
-          <div className="flex gap-6 flex-wrap justify-start">
-            <AppointmentCard status="canceled" />
-            <AppointmentCard status="canceled" />
-            <AppointmentCard status="canceled" />
-          </div>
-        </TabsContent>
-        <TabsContent value="completed">
-          <div className="flex gap-6 flex-wrap justify-start">
-            <AppointmentCard status="completed" />
-            <AppointmentCard status="completed" />
-            <AppointmentCard status="completed" />
-          </div>
-        </TabsContent>
+        {TABS.map(tab => (
+          <TabsContent
+            value={tab.value}
+            className={tabsContentClass}
+          >
+            {filterByDateAndStatus(tab.status).map(card => (
+              <AppointmentCard
+                key={card.id}
+                card={card}
+              />
+            ))}
+          </TabsContent>
+        ))}
       </Tabs>
     </div>
   );

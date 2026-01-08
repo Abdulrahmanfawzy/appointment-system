@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
-import { User } from "lucide-react";
 import DropDown from "../../profile-popup/DropDown";
 import SignInSignUpDropdown from "../../profile-popup/SignInSignUpDropdown";
 import { useMediaQuery } from "@/hooks/useMatchMediaQuery";
 import { useAuthState, useLogout } from "@/hooks/useAuth";
 import { useProfile } from "@/hooks/useProfile";
+import { UserAvatar } from "@/components/ui/UserAvatar";
 
 const UserMenu: React.FC = () => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -12,7 +12,7 @@ const UserMenu: React.FC = () => {
   const { isLargeScreen } = useMediaQuery("(min-width: 768px)");
   const { isAuthenticated } = useAuthState();
   const logout = useLogout();
-  const { user } = useProfile();
+  const { user, isLoading: isProfileLoading } = useProfile();
 
   const handleLogout = () => {
     setShowDropdown(false);
@@ -70,17 +70,17 @@ const UserMenu: React.FC = () => {
           aria-haspopup="true"
         >
           {isAuthenticated ? (
-            <img
-              src={user.avatarUrl}
-              alt={`${user.name}'s profile`}
-              className="w-full h-full object-cover rounded-full"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.src = "https://via.placeholder.com/36";
-              }}
+            <UserAvatar
+              avatarUrl={user.avatarUrl}
+              name={user.name || "User"}
+              size="sm"
+              isLoading={isProfileLoading}
+              className="w-full h-full"
             />
           ) : (
-            <User className="w-5 h-5 text-gray-600" />
+            <div className="w-full h-full rounded-full bg-gray-200 flex items-center justify-center">
+              <span className="text-gray-600 font-semibold text-sm">?</span>
+            </div>
           )}
         </button>
 

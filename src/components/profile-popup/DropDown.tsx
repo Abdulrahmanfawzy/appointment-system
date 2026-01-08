@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { DropdownItem } from "./DropDownItem";
+import { UserAvatar } from "@/components/ui/UserAvatar";
 import {
   PaymentIcon,
   LocationIcon,
@@ -23,11 +24,17 @@ const Dropdown = ({ user, onLogout, onClose }: DropdownProps) => {
   const navigate = useNavigate();
 
   const handlePaymentClick = () => {
-    console.log("Payment Method clicked");
+    navigate("/payment");
+    if (onClose) {
+      onClose();
+    }
   };
 
   const handleFavoriteClick = () => {
-    console.log("Favorite clicked");
+    navigate("/favorites");
+    if (onClose) {
+      onClose();
+    }
   };
 
   const handleSettingsClick = () => {
@@ -38,7 +45,10 @@ const Dropdown = ({ user, onLogout, onClose }: DropdownProps) => {
   };
 
   const handlePrivacyClick = () => {
-    console.log("Privacy Policy clicked");
+    navigate("/profile/change-password");
+    if (onClose) {
+      onClose();
+    }
   };
 
   return (
@@ -82,20 +92,19 @@ const Dropdown = ({ user, onLogout, onClose }: DropdownProps) => {
       )}
 
       <div className="flex items-center gap-4 pb-4">
-        <img
-          src={user.avatarUrl}
-          alt={`${user.name}'s profile picture`}
-          className="h-14 w-14 rounded-full object-cover flex-shrink-0"
-          onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.src = "https://via.placeholder.com/56";
-          }}
+        <UserAvatar
+          avatarUrl={user.avatarUrl}
+          name={user.name || "User"}
+          size="md"
+          className="flex-shrink-0"
         />
         <div className="flex-1 min-w-0">
-          <p className={TYPOGRAPHY.username}>{user.name}</p>
+          <p className={TYPOGRAPHY.username}>{user.name || "User"}</p>
           <div className="flex items-center gap-1.5 mt-1">
             <LocationIcon className="w-3.5 h-3.5 flex-shrink-0" />
-            <p className={TYPOGRAPHY.address}>{user.address}</p>
+            <p className={TYPOGRAPHY.address}>
+              {user.address || "No location provided yet"}
+            </p>
           </div>
         </div>
         <button
