@@ -27,7 +27,7 @@ export default function AppRoutes() {
         <Route path="signup" element={<SignUp />} />
         <Route path="otp" element={<Otp />} />
       </Route>
-
+      {/* test production */}
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Home />} />
         <Route path="search" element={<Search />} />
